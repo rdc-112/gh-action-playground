@@ -13,6 +13,7 @@ jobs:
     steps:
     - uses: actions/first-interaction@v1
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-message: "Message that will be displayed on users' first issue"
-        pr-message: "PR message"
+        script: |
+          const PRContent = context.payload.pull_request
+          console.log(`PR content: ${PRContent}`);
+  
