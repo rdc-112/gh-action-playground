@@ -19,22 +19,11 @@ jobs:
           const prNumber = context.payload.pull_request.number;
           console.log(`PR Number: ${prNumber}`);
           
-          const { data: comments } = await github.issues.listComments({
+          const { data: comments } = await github.pulls.listComments({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            issue_number: prNumber,
+            pull_number: prNumber,
           });
           console.log(`Comments: ${JSON.stringify(comments, null, 2)}`);
 
-          const originalComment = comments.find(comment => comment.user.type === 'Bot');
-          if (originalComment) {
-            console.log(`Original Comment ID: ${originalComment.id}`);
-            await github.issues.updateComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              comment_id: originalComment.id,
-              body: 'new body/message',
-            });
-          } else {
-            console.log('No original comment found.');
-          }
+          
