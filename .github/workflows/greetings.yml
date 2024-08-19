@@ -19,15 +19,14 @@ jobs:
           const prNumber = context.payload.pull_request.number;
           console.log(`PR Number: ${prNumber}`);
 
-          const originalBody = context.payload.pull_request.body
+          const originalBody = context.payload.pull_request.body;
           console.log(`PR Body: ${originalBody}`);
 
-          const newBody = 'New content'
+          const newBody = 'New content';
           
-          const { data: comments } = await github.pulls.update({
+          await github.pulls.update({
             owner: context.repo.owner,
             repo: context.repo.repo,
             pull_number: prNumber,
-            body:newBody
+            body: newBody
           });
-          
