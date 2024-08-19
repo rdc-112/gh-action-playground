@@ -1,19 +1,21 @@
-name: Greetings
+name: Clear PR Comment
 
 on:
- pull_request:
-    branches:
-      - release
+  pull_request:
+    types: [opened]
+
 jobs:
-  greeting:
+  clear-comment:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
+
     steps:
-    - uses: actions/first-interaction@v1
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Clear original PR comment
+      uses: actions/github-script@v6
       with:
         script: |
-          const PRContent = context.payload.pull_request
-          console.log(`PR content: ${PRContent}`);
-  
+          console.log(`Pull Request Payload: ${JSON.stringify(context.payload.pull_request, null, 2)}`);
+
+         
