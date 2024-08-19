@@ -1,19 +1,40 @@
-name: Greetings
+name: Clear PR Comment
 
 on:
- pull_request:
-    branches:
-      - release
+  pull_request:
+    types: [opened]
+
 jobs:
-  greeting:
+  clear-comment:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
+
     steps:
-    - uses: actions/first-interaction@v1
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Clear original PR comment
+      uses: actions/github-script@v6
       with:
         script: |
-          const PRContent = context.payload.pull_request
-          console.log(`PR content: ${PRContent}`);
-  
+          const prNumber = context.payload.pull_request.number;
+          console.log(`PR Number: ${prNumber}`);
+          
+          const { data: comments } = await github.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: prNumber,
+          });
+          console.log(`Comments: ${JSON.stringify(comments, null, 2)}`);
+
+          const originalComment = comments.find(comment => comment.user.type === 'Bot');
+          if (originalComment) {
+            console.log(`Original Comment ID: ${originalComment.id}`);
+            await github.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: originalComment.id,
+              body: 'new body/message',
+            });
+          } else {
+            console.log('No original comment found.');
+          }
