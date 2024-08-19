@@ -2,7 +2,7 @@ name: Clear PR Comment
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened, reopened]
 
 jobs:
   clear-comment:
