@@ -2,7 +2,10 @@ name: Clear PR Comment
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened, reopened]
+
+permissions:
+  pull-requests: write
 
 jobs:
   clear-comment:
@@ -16,4 +19,17 @@ jobs:
       uses: actions/github-script@v6
       with:
         script: |
-          console.log(`Pull Request Payload: ${JSON.stringify(context.payload.pull_request, null, 2)}`);
+          const prNumber = context.payload.pull_request.number;
+          console.log(`PR Number: ${prNumber}`);
+
+          const originalBody = context.payload.pull_request.body;
+          console.log(`PR Body: ${originalBody}`);
+
+          const newBody = 'New content';
+          
+          await github.rest.pulls.update({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: prNumber,
+            body: newBody
+          });
