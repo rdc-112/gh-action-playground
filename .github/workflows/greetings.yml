@@ -25,6 +25,14 @@ jobs:
           const originalBody = context.payload.pull_request.body;
           console.log(`PR Body: ${originalBody}`);
 
+          const commits = await github.rest.pulls.listCommits({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: prNumber,
+          });
+
+          console.log('Commits', commits)
+          
           const newBody = 'New content';
           
           await github.rest.pulls.update({
