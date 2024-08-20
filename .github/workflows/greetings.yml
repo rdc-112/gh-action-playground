@@ -33,7 +33,7 @@ jobs:
 
         
           const mappedCommits = commits.map(commitObject => ({
-            commitObject.commit,
+            commit: commitObject.commit,
             committer: commitObject.committer,
             author: commitObject.author
           }));
