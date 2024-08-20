@@ -32,7 +32,7 @@ jobs:
           });
 
         
-          const mappedCommits = commits.map(commitObject => ({
+          const mappedCommits = commits.data.map(commitObject => ({
             commit: commitObject.commit,
             committer: commitObject.committer,
             author: commitObject.author
