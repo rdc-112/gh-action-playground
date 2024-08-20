@@ -31,8 +31,15 @@ jobs:
             pull_number: prNumber,
           });
 
-          console.log('Commits', commits)
-          
+        
+          const mappedCommits = commits.map(commitObject => ({
+            commitObject.commit,
+            committer: commitObject.committer,
+            author: commitObject.author
+          }));
+
+          console.log(mappedCommits, 'mappedCommits')
+                    
           const newBody = 'New content';
           
           await github.rest.pulls.update({
