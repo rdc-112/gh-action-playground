@@ -1,19 +1,35 @@
-name: Greetings
+name: Clear PR Comment
 
 on:
- pull_request:
-    branches:
-      - release
+  pull_request:
+    types: [opened, reopened]
+
+permissions:
+  pull-requests: write
+
 jobs:
-  greeting:
+  clear-comment:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
+
     steps:
-    - uses: actions/first-interaction@v1
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Clear original PR comment
+      uses: actions/github-script@v6
       with:
         script: |
-          const PRContent = context.payload.pull_request
-          console.log(`PR content: ${PRContent}`);
-  
+          const prNumber = context.payload.pull_request.number;
+          console.log(`PR Number: ${prNumber}`);
+
+          const originalBody = context.payload.pull_request.body;
+          console.log(`PR Body: ${originalBody}`);
+
+          const newBody = 'New content';
+          
+          await github.rest.pulls.update({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: prNumber,
+            body: newBody
+          });
