@@ -19,17 +19,19 @@ jobs:
       uses: actions/github-script@v6
       with:
         script: |
-          const prNumber = context.payload.pull_request.number;
-          console.log(`PR Number: ${prNumber}`);
+          console.log('OWNER', context.repo.owner)
+          console.log('REPO', context.repo.repo)
+          # const prNumber = context.payload.pull_request.number;
+          # console.log(`PR Number: ${prNumber}`);
 
-          const originalBody = context.payload.pull_request.body;
-          console.log(`PR Body: ${originalBody}`);
+          # const originalBody = context.payload.pull_request.body;
+          # console.log(`PR Body: ${originalBody}`);
 
-          const newBody = 'New content';
+          # const newBody = 'New content';
           
-          await github.rest.pulls.update({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            pull_number: prNumber,
-            body: newBody
-          });
+          # await github.rest.pulls.update({
+          #   owner: context.repo.owner,
+          #   repo: context.repo.repo,
+          #   pull_number: prNumber,
+          #   body: newBody
+          # });
