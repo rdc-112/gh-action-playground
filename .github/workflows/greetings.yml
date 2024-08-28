@@ -19,32 +19,34 @@ jobs:
       uses: actions/github-script@v6
       with:
         script: |
+
           const prNumber = context.payload.pull_request.number;
-          console.log(`PR Number: ${prNumber}`);
-
-          const originalBody = context.payload.pull_request.body;
-          console.log(`PR Body: ${originalBody}`);
-
           const commits = await github.rest.pulls.listCommits({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            pull_number: prNumber,
-          });
+            pull_number: prNumber});
 
-        
-          const mappedCommits = commits.data.map(commitObject => ({
-            commit: commitObject.commit,
-            committer: commitObject.committer,
-            author: commitObject.author
-          }));
+          const lineTemplate = `- [ ] [BRANCH_NAME](https://testorg.atlassian.net/browse/BRANCH_NAME) @USER`
 
-          console.log(mappedCommits, 'mappedCommits')
-                    
-          const newBody = 'New content';
+          const filteredCommsfordebug = commits.data
+          .filter(commitObject => commitObject.commit.message.startsWith('Merge pull request'))
+
+          console.log(filteredCommsfordebug[0])
+
+          const newPRContent = commits.data
+          .filter(commitObject => commitObject.commit.message.startsWith('Merge pull request'))
+          .map(x => {
+          const author = x.author.login
+
+          const branchName = x.commit.message.split('/')[1]
+
+          const newLine = lineTemplate.replace('USER',author).replace('BRANCH_NAME', branchName).replace('BRANCH_NAME', branchName)
+          console.log('newLine', newLine)
+
+          return newLine})
+          console.log(newPRContent, 'newPRContent')
+
+
           
-          await github.rest.pulls.update({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            pull_number: prNumber,
-            body: newBody
-          });
+
+    
