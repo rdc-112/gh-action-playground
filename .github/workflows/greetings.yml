@@ -21,3 +21,5 @@ jobs:
         script: |
           console.log('OWNER', context.repo.owner);
           console.log('REPO', context.repo.repo);
+          console.log('fullContext', context)
+          console.log('PRContext', context.payload.pull_request)
